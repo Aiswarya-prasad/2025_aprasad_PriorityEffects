@@ -1,0 +1,45 @@
+{
+    "_comment": "Generated with pbcommand version  at 2025-01-09T18:05:15.562139",
+    "attributes": [
+        {
+            "id": "workflow_task.host",
+            "name": null,
+            "value": "cmpn04.ngsp.internal"
+        },
+        {
+            "id": "workflow_task.system",
+            "name": null,
+            "value": "Linux"
+        },
+        {
+            "id": "workflow_task.nproc",
+            "name": null,
+            "value": 29
+        },
+        {
+            "id": "workflow_task.run_time",
+            "name": null,
+            "value": 63.78650712966919
+        },
+        {
+            "id": "workflow_task.exit_code",
+            "name": null,
+            "value": 0
+        },
+        {
+            "id": "workflow_task.maxrss",
+            "name": null,
+            "value": 56516
+        }
+    ],
+    "dataset_uuids": [],
+    "id": "workflow_task",
+    "plotGroups": [],
+    "tables": [],
+    "tags": [
+        "internal"
+    ],
+    "title": "Workflow Task Report",
+    "uuid": "0eff167e-0907-4aeb-9b21-4d48cc40690c",
+    "version": "1.0.1"
+}

@@ -1,0 +1,26 @@
+Log file created on 2025-04-14 02:38:08.825815
+Input file: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment2/seqtable_nochim.csv
+          contains rows Index(['2-0_1.fastq.gz', '2-0_2.fastq.gz', '2-0_3.fastq.gz', '2-0_4.fastq.gz',
+       '2-0_5.fastq.gz', '2-0_6.fastq.gz', '2-0_7.fastq.gz', '2-0_8.fastq.gz',
+       '2-0_9.fastq.gz', '2-0_10.fastq.gz',
+       ...
+       'a5-3.fastq.gz', 'a6-0.fastq.gz', 'a6-3.fastq.gz', 'eb-4.fastq.gz',
+       'b4-0.fastq.gz', 'b4-3.fastq.gz', 'b5-0.fastq.gz', 'b5-3.fastq.gz',
+       'b6-0.fastq.gz', 'b6-3.fastq.gz'],
+      dtype='object', length=133)
+          Using amplicon sequences from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_amplicons_updated_presence.csv
+Using uid strain information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated.csv
+Using copies information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated_copies.csv
+Output file: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment2/species_table.csv
+Also writing:
+          Fasta sequences unique identity for this samples in header: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment2/species_table_unmatched_asv_sequences.fasta
+          ASV table with all ASVs: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment2/species_table_all_asvs.csv
+
+
+starting to process the ASV table ...
+
+ASV table written 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment2/species_table_all_asvs.csv
+Species table written 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment2/species_table.csv
+Unmatched ASVs: 135 / 176
+Unmatched ASVs written to 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment2/species_table_unmatched_asv_sequences.fasta
+Finished writing unmatched ASVs

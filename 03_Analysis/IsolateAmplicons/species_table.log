@@ -1,0 +1,49 @@
+Log file created on 2025-04-14 02:35:04.672878
+Input file: 03_Analysis/IsolateAmplicons/seqtable_nochim.csv
+          contains rows Index(['ESL0170_filt_reads.fastq.gz', 'ESL0183_filt_reads.fastq.gz',
+       'ESL0184_filt_reads.fastq.gz', 'ESL0185_filt_reads.fastq.gz',
+       'ESL0186_filt_reads.fastq.gz', 'ESL0197_filt_reads.fastq.gz',
+       'ESL0198_filt_reads.fastq.gz', 'ESL0199_filt_reads.fastq.gz',
+       'ESL0200_filt_reads.fastq.gz', 'ESL0261_filt_reads.fastq.gz',
+       'ESL0262_filt_reads.fastq.gz', 'ESL0263_filt_reads.fastq.gz',
+       'ESL0294_filt_reads.fastq.gz', 'ESL0295_filt_reads.fastq.gz',
+       'ESL0350_filt_reads.fastq.gz', 'ESL0394_filt_reads.fastq.gz',
+       'ESL0819_filt_reads.fastq.gz', 'ESL0820_filt_reads.fastq.gz',
+       'ESL0822_filt_reads.fastq.gz', 'ESL0824_filt_reads.fastq.gz',
+       'ESL0825_filt_reads.fastq.gz', 'ESL0827_filt_reads.fastq.gz',
+       'ESL1028_filt_reads.fastq.gz'],
+      dtype='object')
+          Using amplicon sequences from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_amplicons_updated_presence.csv
+Using uid strain information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated.csv
+Using copies information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated_copies.csv
+Output file: 03_Analysis/IsolateAmplicons/species_table.csv
+Also writing:
+          Fasta sequences unique identity for this samples in header: 03_Analysis/IsolateAmplicons/species_table_unmatched_asv_sequences.fasta
+          ASV table with all ASVs: 03_Analysis/IsolateAmplicons/species_table_all_asvs.csv
+
+
+starting to process the ASV table ...
+
+ASV table written 03_Analysis/IsolateAmplicons/species_table_all_asvs.csv
+Species table written 03_Analysis/IsolateAmplicons/species_table.csv
+Unmatched ASVs: 22 / 59
+unk_0 found in amplicon sequences in ESL0350 at 0.04% of 42511 reads
+unk_1 found in amplicon sequences in ESL0825 at 0.09% of 25600 reads
+unk_1 found in amplicon sequences in ESL0825 at 0.09% of 25600 reads
+unk_2 found in amplicon sequences in ESL0294 at 0.05% of 55894 reads
+unk_3 found in amplicon sequences in ESL0824 at 48.02% of 91255 reads
+unk_3 found in amplicon sequences in ESL0824 at 48.02% of 91255 reads
+unk_4 found in amplicon sequences in ESL0294 at 0.06% of 55894 reads
+unk_6 found in amplicon sequences in ESL0294 at 0.09% of 55894 reads
+unk_7 found in amplicon sequences in ESL0200 at 16.57% of 181 reads
+unk_7 found in amplicon sequences in ESL0200 at 16.57% of 181 reads
+unk_10 found in amplicon sequences in ESL0824 at 15.55% of 91255 reads
+unk_10 found in amplicon sequences in ESL0824 at 15.55% of 91255 reads
+unk_11 found in amplicon sequences in ESL0262 at 2.59% of 46573 reads
+unk_12 found in amplicon sequences in ESL0262 at 0.8% of 46573 reads
+unk_13 found in amplicon sequences in ESL0294 at 0.55% of 55894 reads
+unk_14 found in amplicon sequences in ESL0350 at 0.43% of 42511 reads
+unk_15 found in amplicon sequences in ESL0350 at 0.29% of 42511 reads
+unk_16 found in amplicon sequences in ESL0824 at 0.01% of 91255 reads
+Unmatched ASVs written to 03_Analysis/IsolateAmplicons/species_table_unmatched_asv_sequences.fasta
+Finished writing unmatched ASVs

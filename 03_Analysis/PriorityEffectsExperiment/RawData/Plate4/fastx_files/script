@@ -1,0 +1,43 @@
+#!/bin/bash
+PATH="/opt/pacbio/smrtlink/install/smrtlink-release_25.1.0.257715/admin/bin/../../bundles/smrttools/current/private/otherbins/all/bin:/opt/pacbio/smrtlink/install/smrtlink-release_25.1.0.257715/admin/bin/../../bundles/smrtlink-analysisservices-gui/current/private/pacbio/smrtlink-analysisservices-gui/tools/binwrap:/usr/bin:/usr/bin:/bin"
+
+cd /opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution
+tmpDir=$(([ -z "$SINGULARITY_NAME" ] && mkdir -p $(readlink -m /opt/pacbio/smrtlink/userdata/tmp_dir) && mktemp -d /opt/pacbio/smrtlink/userdata/tmp_dir/cromwell_tmp.XXXXXX) || (mkdir -p /tmp/mydir && echo /tmp/mydir))
+
+export _JAVA_OPTIONS=-Djava.io.tmpdir="$tmpDir"
+export TMPDIR="$tmpDir"
+export HOME="$HOME"
+(
+cd /opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution
+
+)
+out2699fd1b="${tmpDir}/out.$$" err2699fd1b="${tmpDir}/err.$$"
+mkfifo "$out2699fd1b" "$err2699fd1b"
+trap 'rm "$out2699fd1b" "$err2699fd1b"' EXIT
+touch '/opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution/stdout' '/opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution/stderr'
+tee '/opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution/stdout' < "$out2699fd1b" &
+tee '/opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution/stderr' < "$err2699fd1b" >&2 &
+(
+cd /opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution
+
+
+python3 \
+  -m pbcoretools.tasks.auto_ccs_outputs_barcoded \
+  --log-level INFO \
+  --nproc 29 \
+  `readlink -f /opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/inputs/614542505/m84151_241230_115705_s1.hifi_reads.consensusreadset.xml` \
+  ccs_demultiplexed_outputs.datastore.json
+)  > "$out2699fd1b" 2> "$err2699fd1b"
+echo $? > /opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution/rc.tmp
+(
+# add a .file in every empty directory to facilitate directory delocalization on the cloud
+cd /opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution
+find . -type d -exec sh -c '[ -z "$(ls -A '"'"'{}'"'"')" ] && touch '"'"'{}'"'"'/.file' \;
+)
+(
+cd /opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution
+
+
+
+)
+mv /opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution/rc.tmp /opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/2699fd1b-7d0f-48e4-8d34-3e17c04b283a/call-auto_ccs_outputs_barcoded/execution/rc

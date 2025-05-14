@@ -1,0 +1,29 @@
+Log file created on 2025-04-14 02:37:57.752755
+Input file: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment3/seqtable_nochim.csv
+          contains rows Index(['3-0_1.fastq.gz', '3-0_2.fastq.gz', '3-0_3.fastq.gz', '3-0_4.fastq.gz',
+       '3-0_5.fastq.gz', '3-0_6.fastq.gz', '3-0_7.fastq.gz', '3-0_8.fastq.gz',
+       '3-0_9.fastq.gz', '3-1_1.fastq.gz',
+       ...
+       'am8.fastq.gz', 'am9.fastq.gz', 'am10.fastq.gz', 'bm2.fastq.gz',
+       'bm3.fastq.gz', 'bm5.fastq.gz', 'bm8.fastq.gz', 'bm9.fastq.gz',
+       'bm10.fastq.gz', 'eb-6.fastq.gz'],
+      dtype='object', length=147)
+          Using amplicon sequences from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_amplicons_updated_presence.csv
+Using uid strain information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated.csv
+Using copies information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated_copies.csv
+Output file: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment3/species_table.csv
+Also writing:
+          Fasta sequences unique identity for this samples in header: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment3/species_table_unmatched_asv_sequences.fasta
+          ASV table with all ASVs: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment3/species_table_all_asvs.csv
+
+
+starting to process the ASV table ...
+
+ASV table written 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment3/species_table_all_asvs.csv
+Species table written 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment3/species_table.csv
+Unmatched ASVs: 404 / 445
+unk_7 found in amplicon sequences in ESL0350 at 0.43% of 42511 reads
+unk_22 found in amplicon sequences in ESL0350 at 0.29% of 42511 reads
+unk_49 found in amplicon sequences in ESL0262 at 0.8% of 46573 reads
+Unmatched ASVs written to 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment3/species_table_unmatched_asv_sequences.fasta
+Finished writing unmatched ASVs

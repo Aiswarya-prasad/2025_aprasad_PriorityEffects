@@ -1,0 +1,13 @@
+#!/bin/bash
+/opt/pacbio/smrtlink/install/smrtlink-release_25.1.0.257715/admin/bin/runjmscmd \
+    --start \
+    --computecfg-id "computecfg_00" \
+    --computecfg-name "computecfg_00" \
+    --computecfg-description "computecfg_00" \
+    --jobname "cromwell_3fd734da_auto_ccs_outputs_barcoded" \
+    --username "lab" \
+    --stdoutfile "/opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/3fd734da-1a0f-43cb-98b6-12446616f47c/call-auto_ccs_outputs_barcoded/execution/stdout" \
+    --stderrfile "/opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/3fd734da-1a0f-43cb-98b6-12446616f47c/call-auto_ccs_outputs_barcoded/execution/stderr" \
+    --nproc "29" \
+    --memory "30720MB" \
+    --cmd "/opt/pacbio/analysis/cromwell-executions/pb_demux_ccs/3fd734da-1a0f-43cb-98b6-12446616f47c/call-auto_ccs_outputs_barcoded/execution/script"

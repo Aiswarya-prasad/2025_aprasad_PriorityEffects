@@ -1,0 +1,28 @@
+Log file created on 2025-04-14 02:38:20.347335
+Input file: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment1/seqtable_nochim.csv
+          contains rows Index(['1-0_1.fastq.gz', '1-0_2.fastq.gz', '1-0_3.fastq.gz', '1-0_4.fastq.gz',
+       '1-0_5.fastq.gz', '1-0_6.fastq.gz', '1-0_7.fastq.gz', '1-0_8.fastq.gz',
+       '1-0_9.fastq.gz', 'eb-1.fastq.gz',
+       ...
+       'a3-3.fastq.gz', 'b1-0.fastq.gz', 'b1-3.fastq.gz', 'b2-0.fastq.gz',
+       'b2-3.fastq.gz', 'b3-0.fastq.gz', 'b3-3.fastq.gz', '1-s0.fastq.gz',
+       '1-s3.fastq.gz', 'eb-2.fastq.gz'],
+      dtype='object', length=142)
+          Using amplicon sequences from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_amplicons_updated_presence.csv
+Using uid strain information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated.csv
+Using copies information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated_copies.csv
+Output file: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment1/species_table.csv
+Also writing:
+          Fasta sequences unique identity for this samples in header: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment1/species_table_unmatched_asv_sequences.fasta
+          ASV table with all ASVs: 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment1/species_table_all_asvs.csv
+
+
+starting to process the ASV table ...
+
+ASV table written 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment1/species_table_all_asvs.csv
+Species table written 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment1/species_table.csv
+Unmatched ASVs: 203 / 244
+unk_33 found in amplicon sequences in ESL0350 at 0.43% of 42511 reads
+unk_54 found in amplicon sequences in ESL0262 at 2.59% of 46573 reads
+Unmatched ASVs written to 03_Analysis/PriorityEffectsExperiment/00_preprocessing/Experiment1/species_table_unmatched_asv_sequences.fasta
+Finished writing unmatched ASVs

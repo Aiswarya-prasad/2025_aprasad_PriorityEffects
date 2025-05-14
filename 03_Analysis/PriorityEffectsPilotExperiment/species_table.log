@@ -1,0 +1,54 @@
+Log file created on 2025-04-14 02:36:40.445503
+Input file: 03_Analysis/PriorityEffectsPilotExperiment/seqtable_nochim.csv
+          contains rows Index(['2-1_filt_reads.fastq.gz', '2-13_filt_reads.fastq.gz',
+       '3-1_filt_reads.fastq.gz', '3-13_filt_reads.fastq.gz',
+       '1-1_filt_reads.fastq.gz', '1-4_filt_reads.fastq.gz',
+       '2-4_filt_reads.fastq.gz', '2-16_filt_reads.fastq.gz',
+       '3-4_filt_reads.fastq.gz', '3-16_filt_reads.fastq.gz',
+       '1-8_filt_reads.fastq.gz', '2-8_filt_reads.fastq.gz',
+       '2-20_filt_reads.fastq.gz', '3-8_filt_reads.fastq.gz',
+       '3-20_filt_reads.fastq.gz', '1-11_filt_reads.fastq.gz',
+       '1-23_filt_reads.fastq.gz', '2-11_filt_reads.fastq.gz',
+       '2-23_filt_reads.fastq.gz', '3-11_filt_reads.fastq.gz',
+       '1-5_filt_reads.fastq.gz', '2-5_filt_reads.fastq.gz',
+       '2-17_filt_reads.fastq.gz', '3-5_filt_reads.fastq.gz',
+       '3-17_filt_reads.fastq.gz', '1-9_filt_reads.fastq.gz',
+       '2-9_filt_reads.fastq.gz', '2-21_filt_reads.fastq.gz',
+       '3-9_filt_reads.fastq.gz', '1-12_filt_reads.fastq.gz',
+       '1-24_filt_reads.fastq.gz', '2-12_filt_reads.fastq.gz',
+       '2-24_filt_reads.fastq.gz', '3-12_filt_reads.fastq.gz',
+       '1-2_filt_reads.fastq.gz', '2-2_filt_reads.fastq.gz',
+       '2-14_filt_reads.fastq.gz', '3-2_filt_reads.fastq.gz',
+       '3-14_filt_reads.fastq.gz', '1-3_filt_reads.fastq.gz',
+       '2-3_filt_reads.fastq.gz', '2-15_filt_reads.fastq.gz',
+       '3-3_filt_reads.fastq.gz', '3-15_filt_reads.fastq.gz',
+       '1-6_filt_reads.fastq.gz', '2-6_filt_reads.fastq.gz',
+       '2-18_filt_reads.fastq.gz', '3-6_filt_reads.fastq.gz',
+       '3-18_filt_reads.fastq.gz', '1-7_filt_reads.fastq.gz',
+       '2-7_filt_reads.fastq.gz', '2-19_filt_reads.fastq.gz',
+       '3-7_filt_reads.fastq.gz', '3-19_filt_reads.fastq.gz',
+       '1-10_filt_reads.fastq.gz', '2-10_filt_reads.fastq.gz',
+       '2-22_filt_reads.fastq.gz', '3-10_filt_reads.fastq.gz',
+       '3-21_filt_reads.fastq.gz', '3-22_filt_reads.fastq.gz',
+       '1-13_filt_reads.fastq.gz', '1-14_filt_reads.fastq.gz',
+       '1-15_filt_reads.fastq.gz', '1-19_filt_reads.fastq.gz',
+       '1-16_filt_reads.fastq.gz', '1-17_filt_reads.fastq.gz',
+       '1-18_filt_reads.fastq.gz', '1-20_filt_reads.fastq.gz',
+       '1-21_filt_reads.fastq.gz', '1-22_filt_reads.fastq.gz'],
+      dtype='object')
+          Using amplicon sequences from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_amplicons_updated_presence.csv
+Using uid strain information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated.csv
+Using copies information from /nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20240399_aprasad_PriorityEffects/03_Analysis/SeqeuncesDB/OnlyIsolateSeqs_updated_copies.csv
+Output file: 03_Analysis/PriorityEffectsPilotExperiment/species_table.csv
+Also writing:
+          Fasta sequences unique identity for this samples in header: 03_Analysis/PriorityEffectsPilotExperiment/species_table_unmatched_asv_sequences.fasta
+          ASV table with all ASVs: 03_Analysis/PriorityEffectsPilotExperiment/species_table_all_asvs.csv
+
+
+starting to process the ASV table ...
+
+ASV table written 03_Analysis/PriorityEffectsPilotExperiment/species_table_all_asvs.csv
+Species table written 03_Analysis/PriorityEffectsPilotExperiment/species_table.csv
+Unmatched ASVs: 32 / 68
+Unmatched ASVs written to 03_Analysis/PriorityEffectsPilotExperiment/species_table_unmatched_asv_sequences.fasta
+Finished writing unmatched ASVs
