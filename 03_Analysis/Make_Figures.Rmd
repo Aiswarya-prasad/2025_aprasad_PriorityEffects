@@ -19,7 +19,6 @@ Information can be found in Utilities.R and other supplementary files. Figure pu
 # Figure 2
 `03_Analysis/Results/figures/priority_effects_experiment/community_composition/pcoa_bray.pdf`
 
-
 # Figure 3
 `03_Analysis/Results/figures/colonization_success/counts_by_arrival_per_strain_beeswarm.pdf`
 
@@ -27,7 +26,7 @@ Information can be found in Utilities.R and other supplementary files. Figure pu
 `03_Analysis/Results/figures/priority_effects_experiment/priority_effect_strength_compared/priority_effect_strength_simple_wo_shape.pdf`
 
 # Figure 5
-`03_Analysis/Results/figures/colonization_success/dropouts_counts_by_arrival_comm_per_strain_beeswarm.pdf`
+`03_Analysis/Results/figures/colonization_success/dropout_comparison_per_strain.pdf`
 
 # Supplementary Figure S1
 `03_Analysis/Results/figures/priority_effects_experiment/colonization_success/total_reads_geq_and_abundance.pdf`
@@ -36,37 +35,38 @@ Information can be found in Utilities.R and other supplementary files. Figure pu
 `03_Analysis/Results/figures/priority_effects_experiment/colonization_success/Strain_abundace_per_sample.pdf`
 
 # Supplementary Figure S3
-`03_Analysis/Results/figures/priority_effects_experiment/community_composition/pcoa_aitchison.pdf`
-`03_Analysis/Results/figures/priority_effects_experiment/community_composition/pcoa_jaccard.pdf`
-
-# Supplementary Figure S4
 `03_Analysis/Results/figures/priority_effects_experiment/spec_abundance_heatmap.pdf`
 
-# Supplementary Figure S5
+# Supplementary Figure S4
 `03_Analysis/Results/figures/priority_effects_experiment/community_alq_heatmap_all_used.pdf`
 
-# Supplementary Figure S6
+# Supplementary Figure S5
 `03_Analysis/Results/figures/priority_effects_experiment/colonization_success/total_load_vs_n_strains.pdf`
 
-# Supplementary Figure S7
+# Supplementary Figure S6
 `03_Analysis/Results/figures/priority_effects_experiment/colonization_success/species_load_vs_treatment.pdf`
+
+# Supplementary Figure S7
+`03_Analysis/Results/figures/priority_effects_experiment/community_composition/pcoa_aitchison.pdf`
+`03_Analysis/Results/figures/priority_effects_experiment/community_composition/pcoa_jaccard.pdf`
 
 # Supplementary Figure S8
 `03_Analysis/Results/figures/colonization_success/full_counts_by_arrival_comm_per_strain_beeswarm.pdf`
 
 # Supplementary Figure S9
-`03_Analysis/IsolateGenomes/ani_heatmap.pdf`
+`03_Analysis/Results/figures/colonization_success/dropouts_counts_by_arrival_comm_per_strain_beeswarm.pdf`
 
 # Supplementary Figure S10
-`03_Analysis/IsolateGenomes/strain_ASV_copies_heatmap.pdf`
+`03_Analysis/IsolateGenomes/ani_heatmap.pdf`
 
 # Supplementary Figure S11
-`03_Analysis/IsolateAmplicons/HeatmapsCompared/Strains_ASVs.pdf`
+`03_Analysis/IsolateGenomes/strain_ASV_copies_heatmap.pdf`
 
 # Supplementary Figure S12
+`03_Analysis/IsolateAmplicons/HeatmapsCompared/Strains_ASVs.pdf`
+
+# Supplementary Figure S13
 `03_Analysis/Results/figures/colonization_success/full_counts_by_arrival_comm_per_strain_beeswarm_pilot.pdf`
-
-
 
 
 for table.. `03_Analysis/Results/tables/df_pvals_all_vals_dropouts.csv`

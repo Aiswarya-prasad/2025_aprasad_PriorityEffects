@@ -2542,6 +2542,397 @@ ggsave("03_Analysis/Results/figures/colonization_success/dropouts_counts_by_arri
 
 ```
 
+Quantify the difference between abundance in full and dropout treatments for 1,4 and 7
+
+```{r}
+
+identify_dropout_type <- function(Strain, CommunityCombo, Treatment) {
+  if (CommunityCombo %in% c("1", "1\'", "2", "3", "4", "5", "6")) {
+    return("Full")
+  } else {
+    if (CommunityCombo == "m1") {
+      if (Strain %in% c("ESL0825", "ESL0820")) {
+        return("Conspecific")
+      } else if (Strain %in% c("ESL0170", "ESL0824", "ESL0198", "ESL0827", "ESL0199", "ESL0200", "ESL0819", "ESL0197")) {
+        return("Same genus")
+      } else {
+        return("Different genus")
+      }
+    }
+    if (CommunityCombo == "m4") {
+      if (Strain %in% c("ESL0827", "ESL0199")) {
+        return("Conspecific")
+      } else if (Strain %in% c("ESL0170", "ESL0824", "ESL0198", "ESL0825", "ESL0820", "ESL0200", "ESL0819", "ESL0197")) {
+        return("Same genus")
+      } else {
+        return("Different genus")
+      }
+    }
+    # if (CommunityCombo == "m6") {
+    #   # conspecifics ESL0825, ESL0820
+    #   # same genus ESL0822
+    #   if (Strain %in% c("ESL0825", "ESL0820")) {
+    #     return("Conspecific")
+    #   } else if (Strain %in% ) {
+    #     return("Same genus")
+    #   } else {
+    #     return("Different genus")
+    #   }
+    # }
+    if (CommunityCombo == "m7") {
+      if (Strain %in% c("ESL0263", "ESL0185")) {
+        return("Conspecific")
+      } else if (Strain %in% c("ESL0183", "ESL0183_ESL0262", "ESL0835", "ESL0184", "ESL0350", "ESL0394", "ESL0186", "ESL0261")) {
+        return("Same genus")
+      } else {
+        return("Different genus")
+      }
+    }
+    return("Unknown")
+  }
+}
+
+df_comparison_full_drop <- df_species_count_all_combined %>%
+                            filter(!ID %in% samples_low_detection) %>%
+                              filter(Type == "bee") %>%
+                              filter(Experiment %in% c("3")) %>%
+                              filter(!grepl("m6", CommunityCombo)) %>%
+                              mutate(abs_counts = ifelse(abs_counts < 1, 1, abs_counts)) %>%
+                              mutate(arrival_comm = paste0(arrival, CommunityCombo)) %>%
+                              filter((arrival %in% c("second") & grepl("m", Treatment)) | arrival %in% c("second", "first") & !grepl("m", Treatment)) %>%
+                              filter(!Strain %in% c(strain_without_species_pair)) %>%
+                              mutate(dropout_type = Vectorize(identify_dropout_type)(Strain, CommunityCombo, Treatment)) %>%
+                              mutate(dropout_type = ifelse(arrival == "first" & dropout_type == "Full", "Full (first)", dropout_type)) %>%
+                              mutate(dropout_type = ifelse(arrival == "second" & dropout_type == "Full", "Full (second)", dropout_type))
+
+drop_order <- c("Full (second)", "Conspecific", "Same genus", "Different genus", "Full (first)")
+comm_order <- c("1\' (second)", "m1", "m4", "m7", "1' (first)")
+
+strain_order <- c(
+  # m1
+  "ESL0825",
+  "ESL0820",
+  # m4
+  "ESL0827",
+  "ESL0199",
+  # m7
+  "ESL0185",
+  "ESL0263",
+  
+  "ESL0822",
+  "ESL0170",
+  "ESL0824",
+  "ESL0198",
+  "ESL0200",
+  "ESL0819",
+  # "ESL0197",
+  # "ESL0295",
+  # "ESL1028",
+  "ESL0183",
+  "ESL0835",
+  # "ESL0394",
+  # "ESL0184",
+  # "ESL0350",
+  "ESL0186",
+  "ESL0261"
+)
+
+p_list <- list()
+for (my_strain in strain_order) {
+  df_comparison_full_drop_iter <- df_comparison_full_drop %>%
+                                    filter(Strain == my_strain) %>%
+                                    mutate(CommunityCombo = ifelse(arrival == "first" & CommunityCombo == "1\'", "1\' (first)", CommunityCombo)) %>%
+                                    mutate(CommunityCombo = ifelse(arrival == "second" & CommunityCombo == "1\'", "1\' (second)", CommunityCombo)) %>%
+                                    mutate(dropout_type = factor(dropout_type, levels = drop_order))
+              
+  
+  if (my_strain %in% c("ESL0825", "ESL0820")) {
+      comparisons_list <- list(c("m1", "1\' (second)"),
+                              c("1\' (first)", "1\' (second)"))
+      a <- df_comparison_full_drop_iter %>% filter(CommunityCombo == "1' (first)") %>% pull(abs_counts)
+      b <- df_comparison_full_drop_iter %>% filter(CommunityCombo == "m1") %>% pull(abs_counts)
+    } else {
+      if (my_strain %in% c("ESL0827", "ESL0199")) {
+        comparisons_list <- list(c("m4", "1\' (second)"),
+                              c("1\' (first)", "1\' (second)"))
+        a <- df_comparison_full_drop_iter %>% filter(CommunityCombo == "1' (first)") %>% pull(abs_counts)
+        b <- df_comparison_full_drop_iter %>% filter(CommunityCombo == "m4") %>% pull(abs_counts)
+      } else {
+        if (my_strain %in% c("ESL0263", "ESL0185")) {
+          comparisons_list <- list(c("m7", "1\' (second)"),
+                              c("1\' (first)", "1\' (second)"))
+          a <- df_comparison_full_drop_iter %>% filter(CommunityCombo == "1' (first)") %>% pull(abs_counts)
+          b <- df_comparison_full_drop_iter %>% filter(CommunityCombo == "m7") %>% pull(abs_counts)
+        }
+        else {
+          comparisons_list <- list(c("1\' (first)", "1\' (second)"))
+          a <- NA
+          b <- NA
+        }
+      }
+    }
+
+
+  spec_name_iter <- df_comparison_full_drop_iter$spec_name[1]
+  spec_name_iter <- strsplit(spec_name_iter, " ")[[1]][2]
+
+  obs_diff <- median(a, na.rm = TRUE) - median(b, na.rm = TRUE)
+
+  # Combine and resample
+  combined <- c(a, b)
+  n_a <- length(a)
+
+  n_iter <- 1000
+  perm_diffs <- replicate(n_iter, {
+    perm <- sample(combined)
+    median(perm[1:n_a]) - median(perm[(n_a + 1):length(combined)])
+  })
+
+  p_val <- mean(abs(perm_diffs) >= abs(obs_diff))
+
+  # calculates the permutation p-value as the proportion of permutations where the test statistic is as extreme or more extreme than observed
+
+  p <- ggplot() +
+    geom_beeswarm(data = df_comparison_full_drop_iter %>% filter(geq_passed != "1"),
+                  aes(x = factor(CommunityCombo, comm_order), y = abs_counts, fill = dropout_type, color = geq_passed, alpha = geq_passed),
+                  # aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = dropout_type, color = geq_passed, alpha = geq_passed),
+                  size = 2.5,
+                  cex = 4,
+                  corral = "wrap",
+                  corral.width = 0.75,
+                  shape = 21,
+                  stroke = 1
+                  ) +
+    geom_beeswarm(data = df_comparison_full_drop_iter %>% filter(geq_passed == "1"),
+                  aes(x = factor(CommunityCombo, comm_order), y = abs_counts, fill = dropout_type, color = geq_passed, alpha = geq_passed),
+                  # aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = dropout_type, color = geq_passed, alpha = geq_passed),
+                  size = 2.5,
+                  cex = 4,
+                  corral = "wrap",
+                  corral.width = 0.75,
+                  shape = 21,
+                  stroke = 1
+                  ) +
+    # geom_boxplot(data = df_comparison_full_drop_iter %>% filter(geq_passed == "1"),
+    #           aes(x = factor(CommunityCombo, comm_order), y = abs_counts, fill = dropout_type, color = geq_passed, alpha = geq_passed),
+    #           # aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = dropout_type),
+    #           color = "#000000",
+    #           width = 0.5
+    #           ) +
+    # facet_wrap(~spec_name_uniq, ncol = 5) +
+    ggtitle(paste0("Strain: ", my_strain, "\n ", spec_name_iter)) +
+    labs(x = "Dropout type", y = "Absolute Abundance") +
+    scale_fill_manual(values = c("Full (first)" = "#000000",
+                                  "Full (second)" = "#999999",
+                                  "Full" = "#000000",
+                                  "Different genus" = "#a6cee3",
+                                  "Same genus" = "#1f78b4",
+                                  "Conspecific" = "#a50f15"
+    )) +
+    # scale_fill_manual(values = c("1\'" = "#000000",
+    #                               "m1" = "#a6cee3",
+    #                               "m4" = "#1f78b4",
+    #                               "m6" = "#fb9a99",
+    #                               "m7" = "#a50f15"
+    # )) +
+    scale_color_manual(values = c("0" = "#999999", "1" = "#000000")) +
+    scale_alpha_manual(values = c("0" = 0.8, "1" = 0.9)) +
+    geom_hline(yintercept = median(df_comparison_full_drop_iter %>%
+                                    filter(dropout_type == "Full (first)") %>%
+                                    pull(abs_counts)
+                              ), linetype = "dashed", color = "#000000") +
+    geom_hline(yintercept = median(df_comparison_full_drop_iter %>%
+                                    filter(dropout_type == "Full (second)") %>%
+                                    pull(abs_counts)
+                              ), linetype = "dashed", color = "#999999") +
+    scale_y_log10(
+      breaks = scales::trans_breaks("log10", function(x) 10^x),
+      labels = scales::trans_format("log10", scales::math_format(10^.x))
+    ) +
+    scale_x_discrete(drop = FALSE) +
+    # geom_signif(data = df_comparison_full_drop_iter %>% mutate(abs_counts = ifelse(abs_counts < 1, 1, abs_counts))
+    #                         , #%>% filter(geq_passed == "1"),
+    #             aes(x = factor(CommunityCombo, comm_order), y = abs_counts),
+    #             comparisons = comparisons_list,
+    #             map_signif_level = TRUE,
+    #             tip_length = 0, step_increase = 0.05, textsize = 2
+    #     ) +
+    annotate("text", x = 1, y = 1e+06, label = paste0("p = ", round(p_val, 3)), size = 4, color = "black") +
+    make_theme(setFill = F, palettefill = "Set1", setCol = F, x_angle = 45,
+              guide_nrow = 23, leg_pos = "none", leg_size = 8,
+              x_hj = 1, x_vj = 1, y_hj = 1) +
+    #  add horizontal lines theme.
+    theme(
+      # panel.grid.major.y = element_line(color = "#999999", size = 0.5),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank()
+    )
+  if (df_comparison_full_drop_iter %>% filter(dropout_type == "Conspecific") %>% nrow() > 0) {
+    p <- p +
+      geom_hline(yintercept = median(df_comparison_full_drop_iter %>%
+                                    filter(dropout_type == "Conspecific") %>%
+                                    pull(abs_counts)
+                              ), linetype = "dashed", color = "#a50f15")
+  }
+  
+  p_list[[my_strain]] <- p
+}
+
+
+pdf("03_Analysis/Results/figures/colonization_success/dropout_comparison_per_strain.pdf", width = 15, height = 20)
+marrangeGrob(p_list, ncol = 4, nrow = 5)
+dev.off()
+
+
+```
+
+
+```{r}
+# cleaner plot and quantification of dropout effects
+
+df_comparison_full_drop
+write.csv(df_comparison_full_drop, "03_Analysis/Results/tables/dropout_comparison_full_drop.csv", row.names = F)
+View(df_comparison_full_drop)
+
+drop_order <- c("Full (second)", "Different genus", "Same genus", "Conspecific", "Full (first)")
+
+df_comparison_full_drop_mod <- df_comparison_full_drop %>%
+                                  # filter(!dropout_type %in% c("Full (first)")) %>%
+                                  mutate(dropout_type_spl = ifelse(grepl("Conspecific", dropout_type), "Conspecific", "Other")) %>%
+                                  filter(!spec_name_uniq %in% c("Lactobacillus melliventris (ESL0394)",
+                                                                "Lactobacillus melliventris (ESL0350)",
+                                                                "Lactobacillus melliventris (ESL0184)")) %>%
+                                  # drop samples which were earlier from Shaded panels indicate missing data due to insufficient sequencing depth
+                                  filter(Treatment != "Bm4-A1")
+
+strain_order_mod <- c("Bifidobacterium apousia (ESL0825)",
+                      "Bifidobacterium apousia (ESL0820)",
+                      "Bifidobacterium sp1. (ESL0827)",
+                      "Bifidobacterium sp1. (ESL0199)",
+                      "Lactobacillus apis (ESL0185)",
+                      "Lactobacillus apis (ESL0263)",
+                      "Bifidobacterium asteroides (ESL0822)",
+                      "Bifidobacterium asteroides (ESL0170)" ,
+                      "Bifidobacterium polysaccharolyticum (ESL0824)",
+                      "Bifidobacterium polysaccharolyticum (ESL0198)",
+                      "Bifidobacterium sp2. (ESL0200)",
+                      "Bifidobacterium sp2. (ESL0819)",
+                      "Lactobacillus helsingborgensis (ESL0183)",
+                      "Lactobacillus helsingborgensis (ESL0835)",
+                      "Lactobacillus kullabergensis (ESL0261)",
+                      "Lactobacillus kullabergensis (ESL0186)"
+                      # "Lactobacillus melliventris (ESL0394)",
+                      # "Lactobacillus melliventris (ESL0350)",
+                      # "Lactobacillus melliventris (ESL0184)"
+                      )
+
+# --- SETTINGS ---
+label_mult <- 1.12  # how far above median to place labels (multiplicative; works on log10 scale)
+
+# --- MEDIANS & % vs Full (first) ---
+meds <- df_comparison_full_drop_mod %>%
+  # choose whether to restrict medians to passed-only:
+  # filter(geq_passed == "1") %>%
+  group_by(spec_name_uniq, dropout_type) %>%
+  summarise(med = median(abs_counts), .groups = "drop") %>%
+  group_by(spec_name_uniq) %>%
+  mutate(
+    med_full_first = med[dropout_type == "Full (first)"][1],
+    log10_med_full = log10(med_full_first),
+    log10_med = log10(med),
+    pct_vs_full_first = log10_med / log10_med_full * 100,
+    fold_change    = med / med_full_first,
+    log2_fc        = log2(fold_change)
+  ) %>%
+  ungroup() %>%
+  # keep only rows where baseline exists
+  filter(!is.na(med_full_first)) %>%
+  mutate(
+    dropout_type = factor(dropout_type, levels = drop_order),
+    y_lab = 10e+9,
+    # y_lab = med * label_mult,
+    pct_lab = ifelse(dropout_type == "Full (first)", "100%", sprintf("%.1f%%", pct_vs_full_first)),
+    lab_log2fc = ifelse(dropout_type == "Full (first)", "1x", sprintf("%.3fx", log2_fc)),
+    lab_fc = ifelse(dropout_type == "Full (first)", "1x", sprintf("%.2fx", fold_change))
+  )
+
+
+ggplot() +
+  geom_beeswarm(data = df_comparison_full_drop_mod %>% filter(geq_passed != "1"),
+                # aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = dropout_type, color = geq_passed, alpha = geq_passed),
+                aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = Strain, color = geq_passed, alpha = geq_passed),
+                size = 2.5,
+                cex = 4,
+                corral = "wrap",
+                corral.width = 0.75,
+                shape = 21,
+                stroke = 0.5
+                ) +
+  geom_beeswarm(data = df_comparison_full_drop_mod %>% filter(geq_passed == "1"),
+                # aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = dropout_type, color = geq_passed, alpha = geq_passed),
+                aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = Strain, color = geq_passed, alpha = geq_passed),
+                size = 2.5,
+                cex = 4,
+                corral = "wrap",
+                corral.width = 0.75,
+                shape = 21,
+                stroke = 0.5
+                ) +
+  # geom_boxplot(data = df_comparison_full_drop_mod %>% filter(geq_passed == "1"),
+  #           # aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = Strain),
+  #           aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = dropout_type),
+  #           alpha = 0.25,
+  #           # aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = dropout_type),
+  #           color = "#000000",
+  #           width = 0.5
+  #           ) +
+  # stat_summary(data = df_comparison_full_drop_mod,
+  #               fun = median, geom = "crossbar", width = 0.5, color = "#000000",
+  #               aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = dropout_type),
+  #               # aes(x = factor(dropout_type, drop_order), y = abs_counts, fill = Strain),
+  # ) +
+  geom_point(data = meds,
+             aes(x = dropout_type, y = med),
+             shape = 45, size = 15, color = "black", stroke = 1.5, inherit.aes = FALSE
+  ) +
+  geom_text(
+    data = meds,
+    aes(x = dropout_type, y = y_lab, label = pct_lab),
+    size = 3, color = "black", inherit.aes = FALSE
+  ) +
+  facet_wrap(~factor(spec_name_uniq, strain_order_mod), ncol = 3) +
+  # ggtitle(paste0("Strain: ", my_strain, "\
+  labs(x = "Dropout type", y = "Absolute Abundance") +
+  scale_fill_manual(values = strainColorsUniq, labels = strain_name_spec_dict_uniq) +
+  # scale_fill_manual(values = c("Full (second)" = "#b9b9b9",
+  #                              "Full (first)" = "#000000",
+  #                              "Different genus" = "#a6cee3",
+  #                              "Same genus" = "#1f78b4",
+  #                              "Conspecific" = "#a50f15"
+  #   )) +
+  scale_color_manual(values = c("0" = "#999999", "1" = "#000000")) +
+  scale_alpha_manual(values = c("0" = 0.8, "1" = 0.9)) +
+  scale_y_log10(
+    breaks = scales::trans_breaks("log10", function(x) 10^x),
+    labels = scales::trans_format("log10", scales::math_format(10^.x))
+  ) +
+  make_theme(setFill = F, palettefill = "Set1", setCol = F, x_angle = 45,
+             guide_nrow = 23, leg_pos = "right", leg_size = 8,
+             x_hj = 1, x_vj = 1, y_hj = 1) +
+  # add verticle grid lines
+  theme(
+    panel.grid.major.x = element_line(color = "#999999", size = 0.5, linetype = "dashed"),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.y = element_line(color = "#999999", size = 0.5),
+    panel.grid.minor.y = element_blank()
+  )
+  # ggsave("03_Analysis/Results/figures/colonization_success/dropout_comparison_per_strain_summary.pdf", width = 10, height = 15)
+  ggsave("03_Analysis/Results/figures/colonization_success/dropout_comparison_per_strain_summary.pdf", width = 10, height = 15)
+```
+
+
 ```{r}
 # run 03_Analysis/priority_effect_strength.py uncommenting simple and advanced
 
@@ -3151,26 +3542,27 @@ for (a_strain in unique(df_species_count_all_adj$Strain)) {
   geom_beeswarm(data = df_species_count_all_adj_strain %>% filter(geq_passed != "1"),
                 # aes(x = arrival, y = abs_counts, fill = Treatment_mod, color = geq_passed, alpha = geq_passed),
                 aes(x = Treatment, y = abs_counts, fill = arrival, color = geq_passed, alpha = geq_passed),
-                size = 2.5,
+                size = 3,
                 cex = 4,
                 corral = "wrap",
-                corral.width = 0.75,
+                corral.width = 0.25,
                 shape = 21,
                 stroke = 1
                 ) +
   geom_beeswarm(data = df_species_count_all_adj_strain %>% filter(geq_passed == "1"),
                 # aes(x = arrival, y = abs_counts, fill = Treatment_mod, color = geq_passed, alpha = geq_passed),
                 aes(x = Treatment, y = abs_counts, fill = arrival, color = geq_passed, alpha = geq_passed),
-                size = 2.5,
+                size = 3,
                 cex = 4,
                 corral = "wrap",
-                corral.width = 0.75,
+                corral.width = 0.25,
                 shape = 21,
                 stroke = 1
                 ) +
-  facet_grid(~spec_name_uniq+factor(arrival, levels = desired_levels), scale = "free_x") +
+  # facet_grid(~spec_name_uniq+factor(arrival, levels = desired_levels), scale = "free_x") +
   scale_color_manual(values = c("0" = "#999999", "1" = "#000000")) +
   scale_alpha_manual(values = c("0" = 0.8, "1" = 0.9)) +
+  ggtitle(paste0("Strain: ", a_strain)) +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x))
@@ -3192,21 +3584,20 @@ for (a_strain in unique(df_species_count_all_adj$Strain)) {
   theme(
     panel.grid.major.y = element_line(color = "#999999", size = 0.5),
     panel.grid.minor.y = element_blank(),
-    panel.grid.major.x = element_blank(),
+    panel.grid.major.x = element_line(color = "#b9b9b9", size = 0.5),
     panel.grid.minor.x = element_blank()
   )
   p_list[[a_strain]] <- p
 }
 
 pdf("03_Analysis/Results/figures/colonization_success/full_counts_by_arrival_comm_per_strain_beeswarm_pilot.pdf", width = 15, height = 20)
-marrangeGrob(p_list, nrow = 5, ncol = 2)
+marrangeGrob(p_list, nrow = 5, ncol = 4)
 dev.off()
 
 ```
 
 
 ```{r}
-# RESUME HERE !!!!
 
 samples_low_detection %>% 
   unique() %>% length()
