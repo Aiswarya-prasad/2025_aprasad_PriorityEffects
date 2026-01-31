@@ -2065,33 +2065,32 @@ system("source ~/.bashrc && conda activate 20230313_scripts_env && python3 03_An
 ```
 
 ```{r}
-df_species_count_plot_
-diff <- df_species_count_all_combined %>%
+df_species_count_plot_diff <- df_species_count_all_combined %>%
                                 filter(Experiment %in% c("1", "2")) %>%
                                 filter(Type == "bee") %>%
                                 filter(arrival %in% c("first", "second", "only")) %>%
                                 mutate(abs_counts = ifelse(abs_counts < 1, 1, abs_counts))
 
-pvals <- df_species_count_plot_diff %>%
-  filter(!arrival %in% c("dropout")) %>%
-  group_by(Strain) %>%
-  wilcox_test(abs_counts ~ arrival, data = .) %>%
-  # correct p-values for multiple tes
-  mutate(y.position = case_when(
-            group1 == "first" & group2 == "second" ~ 11,
-            group1 == "first" & group2 == "only" ~ 10.5,
-            group1 == "only" & group2 == "second" ~ 10,
-            TRUE ~ 10.6
-  )) %>% # Prevent overlap
-  mutate(p = p.adjust(p, method = "BH")) %>%
-  mutate(pval = ifelse(p < 0.05, "*", "ns.")) %>%
-  mutate(pval = ifelse(p < 0.01, "**", pval)) %>%
-  mutate(pval = ifelse(p < 0.001, "***", pval)) %>%
-  left_join(df_species_count_all_combined %>%
-              select(Strain, spec_name_uniq) %>%
-                unique(), by = c("Strain" = "Strain"))
+# pvals <- df_species_count_plot_diff %>%
+#   filter(!arrival %in% c("dropout")) %>%
+#   group_by(Strain) %>%
+#   wilcox_test(abs_counts ~ arrival, data = .) %>%
+#   # correct p-values for multiple tes
+#   mutate(y.position = case_when(
+#             group1 == "first" & group2 == "second" ~ 11,
+#             group1 == "first" & group2 == "only" ~ 10.5,
+#             group1 == "only" & group2 == "second" ~ 10,
+#             TRUE ~ 10.6
+#   )) %>% # Prevent overlap
+#   mutate(p = p.adjust(p, method = "BH")) %>%
+#   mutate(pval = ifelse(p < 0.05, "*", "ns.")) %>%
+#   mutate(pval = ifelse(p < 0.01, "**", pval)) %>%
+#   mutate(pval = ifelse(p < 0.001, "***", pval)) %>%
+#   left_join(df_species_count_all_combined %>%
+#               select(Strain, spec_name_uniq) %>%
+#                 unique(), by = c("Strain" = "Strain"))
 
-write.csv(pvals, "03_Analysis/Results/tables/priority_effect_strength/fig3_beeswarm_pvals.csv", row.names = F)
+# write.csv(pvals, "03_Analysis/Results/tables/priority_effect_strength/fig3_beeswarm_pvals.csv", row.names = F)
 
 pvals_non_zero <- df_species_count_plot_diff %>%
   filter(!arrival %in% c("dropout")) %>%
@@ -2113,6 +2112,18 @@ pvals_non_zero <- df_species_count_plot_diff %>%
               select(Strain, spec_name_uniq) %>%
                 unique(), by = c("Strain" = "Strain"))
 
+fig_strain_order <- c("ESL0820", "ESL0825", "ESL0170", "ESL0822", "ESL0198",
+                      "ESL0824", "ESL0199", "ESL0827", "ESL0200", "ESL0819",
+                      "ESL0184", "ESL0350", "ESL0394", "ESL0185", "ESL0263",
+                      "ESL0183", "ESL0835", "ESL0186", "ESL0261", "ESL0295",
+                      "ESL0835")
+
+write.csv(pvals_non_zero %>%
+            filter(group1 != "only") %>%
+            filter(group2 != "only") %>%
+            mutate(Strain = factor(Strain, levels = unique(fig_strain_order))) %>%
+            arrange(Strain),
+          "03_Analysis/Results/tables/priority_effect_strength/fig3_beeswarm_pvals.csv", row.names = F, quote = F)
 
 ggplot() +
   # geom_bar(data = df_species_count_plot_diff,
