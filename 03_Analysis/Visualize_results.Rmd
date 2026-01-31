@@ -11,6 +11,8 @@
 - Visualize the results of the priority effects pilot experiment (/nas/FAC/FBM/DMF/pengel/spirit/D2c/aprasad/20220921_aprasad_PriorityEffectsExperimentPilot/03_PilotExperiment/07_PacBIO_sequencing/01_ReadsRenamed)
 - Visualize the results of the priority effects experiment
 
+
+
 # Load packages and data
 
 ```{r}
@@ -1181,12 +1183,12 @@ ggplot() +
   geom_bar(data = df_total_reads_compare,
         aes(x = ID, y = total_abs, fill = Treatment_simp),
         stat = "identity", position = "stack") +
-  geom_bar(data = df_total_reads_compare,
-        aes(x = ID, y = sample_geq, fill = Treatment_simp), color = "#000000", alpha = 0.5, stat = "identity") +
+  #geom_bar(data = df_total_reads_compare,
+  #       aes(x = ID, y = sample_geq, fill = Treatment_simp), color = "#000000", alpha = 0.5, stat = "identity") +
   geom_bar(data = df_total_reads_compare %>% filter(!ID %in% samples_low_detection),
         aes(x = ID, y = total_reads), fill = "#ffffff", alpha = 0.5, stat = "identity") +
-  geom_bar(data = df_total_reads_compare %>% filter(ID %in% samples_low_detection),
-        aes(x = ID, y = total_reads), fill = "#000000", stat = "identity") +
+  #geom_bar(data = df_total_reads_compare %>% filter(ID %in% samples_low_detection),
+  #      aes(x = ID, y = total_reads), fill = "#000000", stat = "identity") +
   scale_y_log10(
     breaks = scales::trans_breaks("log10", function(x) 10^x),
     labels = scales::trans_format("log10", scales::math_format(10^.x))
@@ -1519,6 +1521,7 @@ pdf("03_Analysis/Results/figures/priority_effects_experiment/community_compositi
 marrangeGrob(p_list, ncol = 4, nrow = 4)
 dev.off()
 
+# To compare community profiles across treatments, the PERMANOVA method was used. To do this, we used Vegan (v2.6-4) package to obtain Bray-Curtis distances from the log-transformed sample vs. bacterial abundance matrix. The distance matrix was then used to make a PCoA and the adonis2 function was used to perform the PERMANOVA analysis. The effect size (omega squared) was calculated using the adonis_OmegaSq function from the RVAideMemoire package (v0.9-81). The results are shown in the PCoA plots as omega squared and p-value.
 
 p_list <- list()
 for (my_comunity_combo in combos_for_plot) {
@@ -2062,7 +2065,8 @@ system("source ~/.bashrc && conda activate 20230313_scripts_env && python3 03_An
 ```
 
 ```{r}
-df_species_count_plot_diff <- df_species_count_all_combined %>%
+df_species_count_plot_
+diff <- df_species_count_all_combined %>%
                                 filter(Experiment %in% c("1", "2")) %>%
                                 filter(Type == "bee") %>%
                                 filter(arrival %in% c("first", "second", "only")) %>%
@@ -2089,6 +2093,90 @@ pvals <- df_species_count_plot_diff %>%
 
 write.csv(pvals, "03_Analysis/Results/tables/priority_effect_strength/fig3_beeswarm_pvals.csv", row.names = F)
 
+pvals_non_zero <- df_species_count_plot_diff %>%
+  filter(!arrival %in% c("dropout")) %>%
+  group_by(Strain) %>%
+  filter(abs_counts > 1) %>%
+  wilcox_test(abs_counts ~ arrival, data = .) %>%
+  # correct p-values for multiple tes
+  mutate(y.position = case_when(
+            group1 == "first" & group2 == "second" ~ 11,
+            group1 == "first" & group2 == "only" ~ 10.5,
+            group1 == "only" & group2 == "second" ~ 10,
+            TRUE ~ 10.6
+  )) %>% # Prevent overlap
+  mutate(p = p.adjust(p, method = "BH")) %>%
+  mutate(pval = ifelse(p < 0.05, "*", "ns.")) %>%
+  mutate(pval = ifelse(p < 0.01, "**", pval)) %>%
+  mutate(pval = ifelse(p < 0.001, "***", pval)) %>%
+  left_join(df_species_count_all_combined %>%
+              select(Strain, spec_name_uniq) %>%
+                unique(), by = c("Strain" = "Strain"))
+
+
+ggplot() +
+  # geom_bar(data = df_species_count_plot_diff,
+  #           aes(x = arrival, y = sample_geq, group = Strain),
+  #           position = "identity",
+  #           fill = "#b9b9b9", stat = "identity", alpha = 0.05) +
+  geom_boxplot(data = df_species_count_plot_diff %>% filter(geq_passed == "1"),
+                aes(x = arrival, y = abs_counts, fill = Strain),
+                linewidth = 0.5,
+                outlier.shape = NA
+                ) +
+  geom_point(data = df_species_count_plot_diff %>% filter(geq_passed != "1"),
+                aes(x = arrival, y = abs_counts, fill = Strain, color = geq_passed, alpha = geq_passed),
+                size = 2.5, shape = 21, position = position_jitterdodge(jitter.width = 0.25, dodge.width = 0.25)
+                ) +
+  geom_point(data = df_species_count_plot_diff %>% filter(geq_passed == "1"),
+                aes(x = arrival, y = abs_counts, fill = Strain, color = geq_passed, alpha = geq_passed),
+                size = 2.5, shape = 21, position = position_jitterdodge(jitter.width = 0.25, dodge.width = 0.25)
+                ) +
+  facet_wrap(~spec_name_uniq, ncol = 5) +
+  scale_fill_manual(values = strainColorsUniq) +
+  scale_color_manual(values = c("0" = "#999999", "1" = "#000000")) +
+  scale_alpha_manual(values = c("0" = 0.8, "1" = 0.9)) +
+  scale_y_log10(
+    breaks = scales::trans_breaks("log10", function(x) 10^x),
+    labels = scales::trans_format("log10", scales::math_format(10^.x))
+  ) +
+  geom_signif(data = pvals_non_zero, manual = TRUE,
+              aes(xmin = group1, xmax = group2, annotations = pval, y_position = y.position),
+              y_position = 1e+06, tip_length = 0.01
+  ) +
+  make_theme(setFill = F, setCol = F, x_angle = 45,
+             guide_nrow = 23, leg_pos = "none",
+             x_hj = 1, x_vj = 1, y_hj = 1) +
+  #  add horizontal lines theme.
+  theme(
+    panel.grid.major.y = element_line(color = "#999999", size = 0.5),
+    panel.grid.minor.y = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank()
+  )
+ggsave("03_Analysis/Results/figures/colonization_success/counts_by_arrival_per_strain_nonzero_p.pdf", width = 10, height = 15)
+
+
+df_species_count_fischers <- df_species_count_all_combined %>%
+                                filter(Experiment %in% c("1", "2")) %>%
+                                filter(Type == "bee") %>%
+                                filter(arrival %in% c("first", "second", "only")) %>%
+                                mutate(fisch_input = ifelse(abs_counts < 1, 0, 1)) %>%
+                                select(Strain, arrival, fisch_input, ID) %>%
+                                group_by(Strain, arrival) %>%
+                                summarize(present = sum(fisch_input),
+                                          absent = n() - sum(fisch_input)) %>%
+                                pivot_wider(names_from = arrival, values_from = c(present, absent)) %>%
+                                rowwise() %>%
+                                mutate(fishers_pval = fisher.test(matrix(c(present_first, absent_first,
+                                                                           present_second, absent_second),
+                                                                         nrow = 2))$p.value) %>%
+                                ungroup() %>%
+                                mutate(fishers_pval_adj = p.adjust(fishers_pval, method = "BH")) %>%
+                                mutate(fishers_sig = ifelse(fishers_pval_adj < 0.05, "*", "ns.")) %>%
+                                mutate(fishers_sig = ifelse(fishers_pval_adj < 0.01, "**", fishers_sig)) %>%
+                                mutate(fishers_sig = ifelse(fishers_pval_adj < 0.001, "***", fishers_sig))
+write.csv(df_species_count_fischers, "03_Analysis/Results/tables/priority_effect_strength/fig3_fishers_pvals.csv", row.names = F)
 # pvals_all <- df_species_count_plot_diff %>%
 #   filter(!arrival %in% c("only", "dropout")) %>%
 #   group_by(Strain) %>%
@@ -2210,6 +2298,7 @@ pvals <- df_species_count_plot_diff %>%
   mutate(pval = ifelse(p < 0.01, "**", pval)) %>%
   mutate(pval = ifelse(p < 0.001, "***", pval))
 
+
 ggplot() +
   # geom_bar(data = df_species_count_plot_diff,
   #           aes(x = arrival_mod, y = sample_geq, group = Strain),
@@ -2308,6 +2397,7 @@ ggplot() +
     panel.grid.minor.x = element_blank()
   )
 ggsave("03_Analysis/Results/figures/colonization_success/counts_by_arrival_per_comm_per_strain_beeswarm.pdf", width = 15, height = 20)
+
 
 
 df_species_count_plot_diff <- df_species_count_all_combined_mod %>%
@@ -2840,9 +2930,8 @@ meds <- df_comparison_full_drop_mod %>%
   group_by(spec_name_uniq) %>%
   mutate(
     med_full_first = med[dropout_type == "Full (first)"][1],
-    log10_med_full = log10(med_full_first),
-    log10_med = log10(med),
-    pct_vs_full_first = log10_med / log10_med_full * 100,
+    med_full_sec = med[dropout_type == "Full (second)"][1],
+    pct_vs_full_first = (med - med_full_sec) / (med_full_first - med_full_sec) * 100,
     fold_change    = med / med_full_first,
     log2_fc        = log2(fold_change)
   ) %>%
@@ -2853,7 +2942,7 @@ meds <- df_comparison_full_drop_mod %>%
     dropout_type = factor(dropout_type, levels = drop_order),
     y_lab = 10e+9,
     # y_lab = med * label_mult,
-    pct_lab = ifelse(dropout_type == "Full (first)", "100%", sprintf("%.1f%%", pct_vs_full_first)),
+    pct_lab = ifelse(dropout_type == "Full (first)", "100%", sprintf("%.2f%%", pct_vs_full_first)),
     lab_log2fc = ifelse(dropout_type == "Full (first)", "1x", sprintf("%.3fx", log2_fc)),
     lab_fc = ifelse(dropout_type == "Full (first)", "1x", sprintf("%.2fx", fold_change))
   )
@@ -2928,8 +3017,8 @@ ggplot() +
     panel.grid.major.y = element_line(color = "#999999", size = 0.5),
     panel.grid.minor.y = element_blank()
   )
-  # ggsave("03_Analysis/Results/figures/colonization_success/dropout_comparison_per_strain_summary.pdf", width = 10, height = 15)
   ggsave("03_Analysis/Results/figures/colonization_success/dropout_comparison_per_strain_summary.pdf", width = 10, height = 15)
+
 ```
 
 
@@ -9041,4 +9130,11 @@ ggplot() +
 ggsave("03_Analysis/Results/figures/priority_effects_experiment/priority_effect_strength_compared/all_counts_by_arrival_per_strain_across_combos_beeswarm_sep.pdf", width = 20, height = 20)
 
 
+
 ```
+glmer(abs_counts_trans ~ arrival + (1 | CommunityCombo), 
+                 family = Gamma(link = "log"),
+                 data = dat)
+
+For the generalized linear mixed model (GLMM), we can use the `glmer` function from the `lme4` package in R. The model will predict the transformed absolute counts (`abs_counts_trans`) based on the arrival order (`arrival`), while accounting for random effects due to different community combinations (`CommunityCombo`). 
+It was carried out using a Gamma distribution with a log link function, which is appropriate for modeling positive continuous data like counts.
